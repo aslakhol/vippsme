@@ -16,10 +16,14 @@ import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 
 export const Vipps = () => {
+  const defaultPhone = window.localStorage.getItem("phone");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onTouched",
     shouldFocusError: false,
+    defaultValues: {
+      phone: defaultPhone || "",
+    },
   });
 
   const handleChange = (data: z.infer<typeof formSchema>) => {
@@ -29,6 +33,7 @@ export const Vipps = () => {
     const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
     const vippsLink = `https://qr.vipps.no/28/2/01/031/${data.phone}?v=1${messagePart}${amountPart}`;
     navigator.clipboard.writeText(vippsLink);
+    window.localStorage.setItem("phone", data.phone);
 
     toast.success("Lenke kopiert", { description: vippsLink });
   };
