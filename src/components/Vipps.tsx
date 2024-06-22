@@ -23,19 +23,14 @@ export const Vipps = () => {
   });
 
   const handleChange = (data: z.infer<typeof formSchema>) => {
-    if (!form.formState.isValid) {
-      console.log("Form is not valid");
-      toast("Form is not valid.");
-
-      return;
-    }
-
     const messagePart = data.message
       ? `&m=${encodeURIComponent(data.message)}`
       : "";
     const amountPart = data.amount ? `&a=${data.amount}` : "";
     const vippsLink = `https://qr.vipps.no/28/2/01/031/${data.phone}?v=1${messagePart}${amountPart}`;
     navigator.clipboard.writeText(vippsLink);
+
+    toast.success("Lenke kopiert", { description: vippsLink });
   };
 
   return (
@@ -98,7 +93,7 @@ export const Vipps = () => {
           <Button type="submit">Kopier lenke</Button>
         </form>
       </Form>
-      <Toaster />
+      <Toaster richColors theme="light" />
     </div>
   );
 };
