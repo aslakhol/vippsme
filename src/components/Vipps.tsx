@@ -12,6 +12,8 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { Toaster } from "./ui/sonner";
+import { toast } from "sonner";
 
 export const Vipps = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -23,6 +25,8 @@ export const Vipps = () => {
   const handleChange = (data: z.infer<typeof formSchema>) => {
     if (!form.formState.isValid) {
       console.log("Form is not valid");
+      toast("Form is not valid.");
+
       return;
     }
 
@@ -39,7 +43,16 @@ export const Vipps = () => {
       <h1>Lag din egen vipps-lenke</h1>
 
       <Form {...form}>
-        <form className="space-y-8" onSubmit={form.handleSubmit(handleChange)}>
+        <form
+          className="space-y-8"
+          onSubmit={form.handleSubmit(handleChange, (errors) => {
+            const errorMessage = Object.values(errors)[0]?.message;
+
+            toast.error("Feil ved kopiering av lenke", {
+              description: errorMessage,
+            });
+          })}
+        >
           <FormField
             control={form.control}
             name="phone"
@@ -85,6 +98,7 @@ export const Vipps = () => {
           <Button type="submit">Kopier lenke</Button>
         </form>
       </Form>
+      <Toaster />
     </div>
   );
 };
