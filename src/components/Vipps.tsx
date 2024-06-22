@@ -12,19 +12,28 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import { Label } from "@radix-ui/react-label";
 
 export const Vipps = () => {
+  const [link, setLink] = useState<string>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onTouched",
+    shouldFocusError: false,
   });
+
+  const handleChange = (data: z.infer<typeof formSchema>) => {
+    console.log(data);
+    setLink(data.phone);
+  };
 
   return (
     <div>
       <h1>Lag din egen vipps-lenke</h1>
 
       <Form {...form}>
-        <form className="space-y-8">
+        <form className="space-y-8" onChange={form.handleSubmit(handleChange)}>
           <FormField
             control={form.control}
             name="phone"
@@ -67,7 +76,19 @@ export const Vipps = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Send</Button>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <FormLabel htmlFor="vipps-link">Vipps-lenke</FormLabel>
+            <div className="flex w-full max-w-sm items-center space-x-2 ">
+              <Input
+                id="vipps-link"
+                type="text"
+                readOnly
+                value={link}
+                className="focus-visible:ring-0"
+              />
+              <Button type="button">Kopier</Button>
+            </div>
+          </div>
         </form>
       </Form>
     </div>
