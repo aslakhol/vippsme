@@ -90,7 +90,9 @@ export const Vipps = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Kopier lenke</Button>
+          <Button type="submit" className="bg-[#ff5b24] w-full">
+            Kopier vipps-lenke
+          </Button>
         </form>
       </Form>
       <Toaster richColors theme="light" />
