@@ -26,7 +26,7 @@ export const Vipps = () => {
     const messagePart = data.message
       ? `&m=${encodeURIComponent(data.message)}`
       : "";
-    const amountPart = data.amount ? `&a=${data.amount}` : "";
+    const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
     const vippsLink = `https://qr.vipps.no/28/2/01/031/${data.phone}?v=1${messagePart}${amountPart}`;
     navigator.clipboard.writeText(vippsLink);
 
