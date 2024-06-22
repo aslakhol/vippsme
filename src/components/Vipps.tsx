@@ -35,8 +35,16 @@ export const Vipps = () => {
 
   return (
     <div>
-      <h1>Lag din egen vipps-lenke</h1>
-
+      <h1 className="text-3xl font-extrabold tracking-tight lg:text-5xl">
+        Lag din egen Vipps-lenke
+      </h1>
+      <p className="leading-6 text-sm mt-6 mb-1">
+        Lenken fyller ut nummeret, beløp og meldingen, men de kan endres.
+      </p>
+      <p className="leading-6 text-sm  mb-6">
+        OBS: Lenken må brukes på mobil, i en vanlig nettleser (ikke inne i
+        Messenger e.l.)
+      </p>
       <Form {...form}>
         <form
           className="space-y-8"
@@ -79,19 +87,19 @@ export const Vipps = () => {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Melding?</FormLabel>
+                <FormLabel>Hva gjelder det?</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
                 <FormDescription>
-                  Denne blir lagt til i vippsen, men kan endres.
+                  Blir lagt til som melding i vippsen.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button type="submit" className="bg-[#ff5b24] w-full">
-            Kopier vipps-lenke
+            Kopier Vipps-lenke
           </Button>
         </form>
       </Form>
