@@ -99,11 +99,10 @@ export const Vipps = () => {
 };
 
 const formSchema = z.object({
-  phone: z.string().min(4, "Må ha et telefonnummer").optional(),
+  phone: z.string().length(8, "Må være 8 siffer").optional(),
   amount: z.coerce.number().min(0, "Må være et positivt tall?").optional(),
   message: z
     .string()
     .max(50, "Vipps tillater ikke meldinger lengre en 50 tegn")
     .optional(),
 });
-//TODO Check if + 47 works
