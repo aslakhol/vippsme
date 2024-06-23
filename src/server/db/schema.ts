@@ -8,6 +8,7 @@ import {
   pgTableCreator,
   serial,
   timestamp,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -34,17 +35,25 @@ export const posts = createTable(
   }),
 );
 
-export const links = createTable("link", {
-  id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 256 }).unique().notNull(),
-  clicks: integer("clicks").default(0),
-  phone: varchar("phone", { length: 256 }).notNull(),
-  message: varchar("message", { length: 256 }),
-  amount: integer("amount"),
-  vipps: varchar("vipps", { length: 256 }).notNull(),
-  https: varchar("http", { length: 256 }).notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updatedAt", { withTimezone: true }),
-});
+export const links = createTable(
+  "link",
+  {
+    id: serial("id").primaryKey(),
+    slug: varchar("slug", { length: 256 }).unique().notNull(),
+    clicks: integer("clicks").default(0),
+    phone: varchar("phone", { length: 256 }).notNull(),
+    message: varchar("message", { length: 256 }),
+    amount: integer("amount"),
+    vipps: varchar("vipps", { length: 256 }).notNull(),
+    https: varchar("http", { length: 256 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+  },
+  (table) => {
+    return {
+      slugIndex: uniqueIndex("slug_idx").on(table.slug),
+    };
+  },
+);

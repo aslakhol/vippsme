@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS "slug_idx" ON "vippsme_link" ("slug");
