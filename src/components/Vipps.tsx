@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { api } from "../trpc/react";
 import { formSchema } from "../lib/utils";
 import { env } from "../env";
+import { Links } from "./Links";
 
 export const Vipps = () => {
   const createLinkMutation = api.link.create.useMutation({
@@ -123,6 +124,9 @@ export const Vipps = () => {
           </Button>
         </form>
       </Form>
+      <div className="py-8">
+        <Links />
+      </div>
       <Toaster richColors />
     </div>
   );
