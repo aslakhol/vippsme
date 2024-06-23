@@ -8,10 +8,12 @@ type Props = { slug: string };
 export const Redirect = ({ slug }: Props) => {
   const linkQuery = api.link.get.useQuery({ slug });
 
-  const redirectUrl = `https://qr.vipps.no/28/2/01/031/${slug}?v=1`;
-
   const handleManualRedirect = () => {
-    window.open(redirectUrl);
+    if (!linkQuery.data?.https) {
+      return;
+    }
+
+    window.open(linkQuery.data.https);
   };
 
   return (
