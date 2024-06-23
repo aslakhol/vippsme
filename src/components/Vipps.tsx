@@ -26,7 +26,7 @@ export const Vipps = () => {
     },
   });
 
-  const defaultPhone = window.localStorage.getItem("phone");
+  const defaultPhone = useLocalPhone();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onTouched",
@@ -125,4 +125,12 @@ export const Vipps = () => {
       <Toaster richColors />
     </div>
   );
+};
+
+const useLocalPhone = () => {
+  if (typeof window !== "undefined") {
+    const phone = window.localStorage.getItem("phone");
+    return phone;
+  }
+  return "";
 };
