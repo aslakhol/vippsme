@@ -68,7 +68,7 @@ export const Vipps = () => {
               <FormItem>
                 <FormLabel>Ditt telefonnummer</FormLabel>
                 <FormControl>
-                  <Input type="tel" {...field} required />
+                  <Input type="tel" {...field} required className="text-md" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -81,7 +81,7 @@ export const Vipps = () => {
               <FormItem>
                 <FormLabel>Hvor mange kroner?</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" {...field} className="text-md" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,7 +94,7 @@ export const Vipps = () => {
               <FormItem>
                 <FormLabel>Hva gjelder det?</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} className="text-md" />
                 </FormControl>
                 <FormDescription>
                   Blir lagt til som melding i vippsen.
