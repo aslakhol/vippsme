@@ -40,7 +40,7 @@ export const Vipps = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-extrabold tracking-tight lg:text-5xl">
+      <h1 className="text-3xl font-extrabold tracking-tight">
         Lag din egen Vipps-lenke
       </h1>
       <p className="leading-6 text-sm mt-6 mb-1">
