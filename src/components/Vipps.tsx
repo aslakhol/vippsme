@@ -22,11 +22,13 @@ import { env } from "../env";
 import { Links } from "./Links";
 
 export const Vipps = () => {
+  const { addLocalLink } = useAddLocalLink();
   const createLinkMutation = api.link.create.useMutation({
     onSuccess: async (response) => {
       const redirectUrl = `${env.NEXT_PUBLIC_HOST}/s/${response.slug}`;
 
       await navigator.clipboard.writeText(redirectUrl);
+      addLocalLink(response.slug);
 
       toast.success("Lenke kopiert", {
         description: redirectUrl,
@@ -138,4 +140,25 @@ const useLocalPhone = () => {
     return phone;
   }
   return "";
+};
+
+const useAddLocalLink = () => {
+  if (typeof window === "undefined") {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return { addLocalLink: () => {} };
+  }
+
+  const localLinks = window.localStorage.getItem("links")?.split(",") ?? [];
+
+  const addLocalLink = (slug: string) => {
+    if (localLinks.includes(slug)) {
+      return;
+    }
+
+    const newLocalLinks = [...localLinks, slug];
+
+    window.localStorage.setItem("links", newLocalLinks.join(","));
+  };
+
+  return { addLocalLink };
 };
