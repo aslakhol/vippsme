@@ -108,7 +108,7 @@ export const Vipps = () => {
           </Button>
         </form>
       </Form>
-      <Toaster richColors theme="light" />
+      <Toaster richColors />
     </div>
   );
 };
