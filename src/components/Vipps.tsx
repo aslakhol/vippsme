@@ -18,11 +18,18 @@ import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 import { api } from "../trpc/react";
 import { formSchema } from "../lib/utils";
+import { env } from "../env";
 
 export const Vipps = () => {
   const createLinkMutation = api.link.create.useMutation({
-    onSuccess: (response) => {
-      toast.success("Lenke kopiert", { description: response.slug });
+    onSuccess: async (response) => {
+      const redirectUrl = `${env.NEXT_PUBLIC_HOST}/s/${response.slug}`;
+
+      await navigator.clipboard.writeText(redirectUrl);
+
+      toast.success("Lenke kopiert", {
+        description: redirectUrl,
+      });
     },
   });
 
@@ -37,12 +44,6 @@ export const Vipps = () => {
   });
 
   const handleChange = async (data: z.infer<typeof formSchema>) => {
-    const messagePart = data.message
-      ? `&m=${encodeURIComponent(data.message)}`
-      : "";
-    const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
-    const vippsLink = `https://qr.vipps.no/28/2/01/031/${data.phone}?v=1${messagePart}${amountPart}`;
-    await navigator.clipboard.writeText(vippsLink);
     window.localStorage.setItem("phone", data.phone);
 
     createLinkMutation.mutate({
