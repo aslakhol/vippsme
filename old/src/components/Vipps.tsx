@@ -22,7 +22,7 @@ export const Vipps = () => {
     mode: "onTouched",
     shouldFocusError: false,
     defaultValues: {
-      phone: defaultPhone || "",
+      phone: defaultPhone ?? "",
     },
   });
 
@@ -43,10 +43,10 @@ export const Vipps = () => {
       <h1 className="text-3xl font-extrabold tracking-tight">
         Lag din egen Vipps-lenke
       </h1>
-      <p className="leading-6 text-sm mt-6 mb-1">
+      <p className="mb-1 mt-6 text-sm leading-6">
         Lenken fyller ut nummeret, beløp og meldingen, men de kan endres.
       </p>
-      <p className="leading-6 text-sm  mb-6">
+      <p className="mb-6 text-sm  leading-6">
         OBS: Lenken må brukes på mobil, i en vanlig nettleser (ikke inne i
         Messenger e.l.)
       </p>
@@ -103,7 +103,7 @@ export const Vipps = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="bg-[#ff5b24] w-full">
+          <Button type="submit" className="w-full bg-[#ff5b24]">
             Kopier Vipps-lenke
           </Button>
         </form>
