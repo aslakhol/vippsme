@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  database:
+    image: "postgres:alpine"
+    restart: always
+    volumes:
+      - "./resources/postgres:/docker-entrypoint-initdb.d"
+    environment:
+      - POSTGRES_DB=vippsme
+      - POSTGRES_USER=vippsme
+      - POSTGRES_PASSWORD=vippsme
+    ports:
+      - "5434:5432"
