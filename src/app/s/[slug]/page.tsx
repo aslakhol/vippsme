@@ -1,5 +1,4 @@
 import { Redirect } from "../../../components/Redirect";
-import { api } from "../../../trpc/react";
 
 export default async function SlugPage({
   params,
