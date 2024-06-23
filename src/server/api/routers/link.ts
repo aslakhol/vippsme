@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { links } from "../../db/schema";
 import { formSchema } from "../../../lib/utils";
+import { z } from "zod";
 
 export const linkRouter = createTRPCRouter({
   create: publicProcedure.input(formSchema).mutation(async ({ ctx, input }) => {
@@ -21,4 +22,13 @@ export const linkRouter = createTRPCRouter({
 
     return { slug };
   }),
+  get: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const link = await ctx.db.query.links.findFirst({
+        where: (link, { eq }) => eq(link.slug, input.slug),
+      });
+
+      return link;
+    }),
 });

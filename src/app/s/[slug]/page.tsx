@@ -1,4 +1,5 @@
 import { Redirect } from "../../../components/Redirect";
+import { api } from "../../../trpc/react";
 
 export default async function SlugPage({
   params,
@@ -7,7 +8,7 @@ export default async function SlugPage({
 }) {
   return (
     <main className="mx-auto flex h-screen max-w-sm flex-col items-start gap-8 py-20">
-      <Redirect slug={params.slug} />
+      {params.slug && <Redirect slug={params.slug} />}
     </main>
   );
 }
