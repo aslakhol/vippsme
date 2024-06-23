@@ -2,19 +2,31 @@
 import { LoaderCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { api } from "../trpc/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = { slug: string };
 
 export const Redirect = ({ slug }: Props) => {
   const linkQuery = api.link.get.useQuery({ slug });
 
+  const router = useRouter();
+
   const handleManualRedirect = () => {
     if (!linkQuery.data?.https) {
       return;
     }
 
-    window.open(linkQuery.data.https);
+    router.push(linkQuery.data.https);
   };
+
+  useEffect(() => {
+    if (!linkQuery.data) {
+      return;
+    }
+
+    router.replace(linkQuery.data.vipps);
+  }, [linkQuery.data, router]);
 
   return (
     <>
