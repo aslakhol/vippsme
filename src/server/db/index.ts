@@ -1,5 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { customAlphabet } from "nanoid";
 
 import { env } from "@/env";
 import * as schema from "./schema";
@@ -16,3 +17,6 @@ const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema });
+
+const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
+export const nanoId = customAlphabet(alphabet, 8);

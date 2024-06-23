@@ -115,7 +115,7 @@ export const Vipps = () => {
   );
 };
 
-const formSchema = z.object({
+export const formSchema = z.object({
   phone: z
     .string()
     .refine((v) => {

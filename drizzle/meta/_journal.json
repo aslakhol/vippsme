@@ -8,6 +8,13 @@
       "when": 1719153720723,
       "tag": "0000_bizarre_true_believers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1719162497495,
+      "tag": "0001_flaky_loners",
+      "breakpoints": true
     }
   ]
 }
