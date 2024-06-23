@@ -2,6 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { links } from "../../db/schema";
 import { formSchema } from "../../../lib/utils";
 import { z } from "zod";
+import { eq, sql } from "drizzle-orm";
 
 export const linkRouter = createTRPCRouter({
   create: publicProcedure.input(formSchema).mutation(async ({ ctx, input }) => {
@@ -30,5 +31,18 @@ export const linkRouter = createTRPCRouter({
       });
 
       return link;
+    }),
+  incrementClicks: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const updatedLink = ctx.db
+        .update(links)
+        .set({ clicks: sql`${links.clicks} + 1` })
+        .where(eq(links.slug, input.slug))
+        .returning();
+
+      console.log(updatedLink, "updatedLink");
+
+      return updatedLink;
     }),
 });

@@ -2,13 +2,22 @@
 import { LoaderCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { api } from "../trpc/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 type Props = { slug: string };
 
 export const Redirect = ({ slug }: Props) => {
   const linkQuery = api.link.get.useQuery({ slug });
+  const incrementClicksMutation = api.link.incrementClicks.useMutation({
+    onSuccess: (result) => {
+      if (!result[0]?.vipps) {
+        return;
+      }
+
+      router.replace(result[0].vipps);
+    },
+  });
 
   const router = useRouter();
 
@@ -20,13 +29,9 @@ export const Redirect = ({ slug }: Props) => {
     router.push(linkQuery.data.https);
   };
 
-  useEffect(() => {
-    if (!linkQuery.data) {
-      return;
-    }
-
-    router.replace(linkQuery.data.vipps);
-  }, [linkQuery.data, router]);
+  useEffectOnce(async () => {
+    void incrementClicksMutation.mutateAsync({ slug });
+  });
 
   return (
     <>
@@ -59,3 +64,16 @@ export const Redirect = ({ slug }: Props) => {
     </>
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents
+export function useEffectOnce(effect: () => Promise<any> | any): void {
+  const hasRun = useRef(false);
+
+  useEffect(() => {
+    if (!hasRun.current) {
+      hasRun.current = true;
+      effect();
+    }
+    // eslint-disable-next-line
+  }, []);
+}
