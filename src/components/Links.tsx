@@ -23,6 +23,7 @@ export const Links = () => {
 
   return (
     <div>
+      <h2 className="pb-4 text-2xl font-bold tracking-tight">Mine lenker</h2>
       <Table>
         <TableCaption>Lenker du har laget fra denne nettleseren</TableCaption>
         <TableHeader>
