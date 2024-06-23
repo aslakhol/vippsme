@@ -19,7 +19,12 @@ import { toast } from "sonner";
 import { api } from "../trpc/react";
 import { formSchema } from "../lib/utils";
 import { env } from "../env";
-import { Links } from "./Links";
+
+import dynamic from "next/dynamic";
+
+const DynamicLinks = dynamic(() => import("./Links"), {
+  ssr: false,
+});
 
 export const Vipps = () => {
   const { addLocalLink } = useAddLocalLink();
@@ -127,7 +132,7 @@ export const Vipps = () => {
         </form>
       </Form>
       <div className="py-8">
-        <Links />
+        <DynamicLinks />
       </div>
       <Toaster richColors />
     </div>

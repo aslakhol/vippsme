@@ -17,7 +17,7 @@ import { env } from "../env";
 export const Links = () => {
   const linkSlugs = getLocalLinks();
 
-  if (!linkSlugs.length) {
+  if (!linkSlugs?.length) {
     return null;
   }
 
@@ -48,10 +48,6 @@ type LinkProps = { slug: string };
 const Link = ({ slug }: LinkProps) => {
   const linkQuery = api.link.get.useQuery({ slug });
 
-  if (!linkQuery.data) {
-    return null;
-  }
-
   const copyLink = async () => {
     if (!linkQuery.data?.https) {
       return;
@@ -67,8 +63,8 @@ const Link = ({ slug }: LinkProps) => {
 
   return (
     <TableRow>
-      <TableCell className="font-medium">{linkQuery.data.slug}</TableCell>
-      <TableCell className="text-right">{linkQuery.data.clicks}</TableCell>
+      <TableCell className="font-medium">{slug}</TableCell>
+      <TableCell className="text-right">{linkQuery.data?.clicks}</TableCell>
       <TableCell className="text-right">
         <Button onClick={copyLink} variant="outline" size="icon">
           <Copy className="h-4 w-4" />
@@ -85,3 +81,5 @@ const getLocalLinks = () => {
   }
   return [];
 };
+
+export default Links;
