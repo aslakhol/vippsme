@@ -1,0 +1,12 @@
+---
+import { RedirectTest } from '../components/RedirectTest';
+import Layout from '../layouts/Layout.astro';
+import '@/styles/globals.css'
+
+---
+
+<Layout title="Vipps meg" description='Lag din egen vipps-lenke'>
+	<main class="max-w-sm mx-auto h-screen pt-10 px-4">
+		<RedirectTest client:only/>
+	</main>
+</Layout>
