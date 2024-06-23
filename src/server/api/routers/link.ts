@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { formSchema } from "../../../components/Vipps";
 import { links } from "../../db/schema";
+import { formSchema } from "../../../lib/utils";
 
 export const linkRouter = createTRPCRouter({
   create: publicProcedure.input(formSchema).mutation(async ({ ctx, input }) => {

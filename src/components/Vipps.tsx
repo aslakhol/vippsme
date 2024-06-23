@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { Input } from "./ui/input";
-import { z } from "zod";
+import { type z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -16,8 +16,16 @@ import {
 import { Button } from "./ui/button";
 import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
+import { api } from "../trpc/react";
+import { formSchema } from "../lib/utils";
 
 export const Vipps = () => {
+  const createLinkMutation = api.link.create.useMutation({
+    onSuccess: (response) => {
+      toast.success("Lenke kopiert", { description: response.slug });
+    },
+  });
+
   const defaultPhone = window.localStorage.getItem("phone");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,7 +45,11 @@ export const Vipps = () => {
     await navigator.clipboard.writeText(vippsLink);
     window.localStorage.setItem("phone", data.phone);
 
-    toast.success("Lenke kopiert", { description: vippsLink });
+    createLinkMutation.mutate({
+      phone: data.phone,
+      amount: data.amount,
+      message: data.message,
+    });
   };
 
   return (
@@ -114,26 +126,3 @@ export const Vipps = () => {
     </div>
   );
 };
-
-export const formSchema = z.object({
-  phone: z
-    .string()
-    .refine((v) => {
-      return !v.includes("+") && !v.startsWith("00");
-    }, "Ikke bruk landskode (f.eks. +47).")
-    .refine((v) => {
-      return !isNaN(+v);
-    }, "Må være bare tall.")
-    .refine((v) => {
-      return v.length === 8;
-    }, "Må være 8 siffer."),
-  amount: z.coerce
-    .number()
-    .min(0, "Må være et positivt tall.")
-    .max(99000, "Vipps tillater ikke beløp over 99 000 kr.")
-    .optional(),
-  message: z
-    .string()
-    .max(50, "Vipps tillater ikke meldinger lengre en 50 tegn.")
-    .optional(),
-});
