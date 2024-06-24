@@ -16,31 +16,10 @@ import {
 import { Button } from "./ui/button";
 import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
-import { api } from "../trpc/react";
 import { formSchema } from "../lib/utils";
 import { env } from "../env";
 
-import dynamic from "next/dynamic";
-
-const DynamicLinks = dynamic(() => import("./Links"), {
-  ssr: false,
-});
-
 export const Vipps = () => {
-  const { addLocalLink } = useAddLocalLink();
-  const createLinkMutation = api.link.create.useMutation({
-    onSuccess: async (response) => {
-      const redirectUrl = `${env.NEXT_PUBLIC_HOST}/s/${response.slug}`;
-
-      await navigator.clipboard.writeText(redirectUrl);
-      addLocalLink(response.slug);
-
-      toast.success("Lenke kopiert", {
-        description: redirectUrl,
-      });
-    },
-  });
-
   const defaultPhone = useLocalPhone();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,11 +32,16 @@ export const Vipps = () => {
 
   const handleChange = async (data: z.infer<typeof formSchema>) => {
     window.localStorage.setItem("phone", data.phone);
+    const messagePart = data.message
+      ? `&m=${encodeURIComponent(data.message)}`
+      : "";
+    const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
 
-    createLinkMutation.mutate({
-      phone: data.phone,
-      amount: data.amount,
-      message: data.message,
+    const redirectUrl = `${env.NEXT_PUBLIC_HOST}/r?p=${data.phone}${messagePart}${amountPart}`;
+
+    await navigator.clipboard.writeText(redirectUrl);
+    toast.success("Lenke kopiert", {
+      description: redirectUrl,
     });
   };
 
@@ -131,9 +115,7 @@ export const Vipps = () => {
           </Button>
         </form>
       </Form>
-      <div className="py-8">
-        <DynamicLinks />
-      </div>
+
       <Toaster richColors />
     </div>
   );
@@ -145,25 +127,4 @@ const useLocalPhone = () => {
     return phone;
   }
   return "";
-};
-
-const useAddLocalLink = () => {
-  if (typeof window === "undefined") {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    return { addLocalLink: () => {} };
-  }
-
-  const localLinks = window.localStorage.getItem("links")?.split(",") ?? [];
-
-  const addLocalLink = (slug: string) => {
-    if (localLinks.includes(slug)) {
-      return;
-    }
-
-    const newLocalLinks = [...localLinks, slug];
-
-    window.localStorage.setItem("links", newLocalLinks.join(","));
-  };
-
-  return { addLocalLink };
 };
