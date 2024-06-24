@@ -1,36 +1,28 @@
 "use client";
-import { LoaderCircle } from "lucide-react";
 import { Button } from "./ui/button";
-import { api } from "../trpc/react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { formSchema } from "../lib/utils";
+import { ZodError } from "zod";
 
-type Props = { slug: string };
+type Props = { phone: string; amount?: number; message?: string };
 
-export const Redirect = ({ slug }: Props) => {
-  const linkQuery = api.link.get.useQuery({ slug });
-  const incrementClicksMutation = api.link.incrementClicks.useMutation({
-    onSuccess: (result) => {
-      if (!result[0]?.vipps) {
-        return;
-      }
-
-      router.replace(result[0].vipps);
-    },
-  });
-
+export const Redirect = ({ phone, amount, message }: Props) => {
+  const { https, vipps, error } = getLinks({ phone, amount, message });
   const router = useRouter();
 
   const handleManualRedirect = () => {
-    if (!linkQuery.data?.https) {
+    if (!https) {
       return;
     }
-
-    router.push(linkQuery.data.https);
+    router.push(https);
   };
 
-  useEffectOnce(async () => {
-    void incrementClicksMutation.mutateAsync({ slug });
+  useEffectOnce(() => {
+    if (!vipps) {
+      return;
+    }
+    router.replace(vipps);
   });
 
   return (
@@ -40,24 +32,14 @@ export const Redirect = ({ slug }: Props) => {
       </h1>
       <p className="text-sm">PS: Lenken fungerer bare på mobil.</p>
 
-      {linkQuery.isLoading && (
-        <>
-          <LoaderCircle className="animate-spin self-center" size={32} />
-        </>
-      )}
-
-      {!linkQuery.data && !linkQuery.isLoading && (
+      {(!https || error) && (
         <p className="text-sm">
           Finner ikke vipps-lenken, har du kopiert riktig?
         </p>
       )}
 
-      {linkQuery.data && (
-        <Button
-          className="w-full bg-[#ff5b24]"
-          onClick={handleManualRedirect}
-          disabled={linkQuery.isLoading || !linkQuery.data}
-        >
+      {https && (
+        <Button className="w-full bg-[#ff5b24]" onClick={handleManualRedirect}>
           Send meg videre manuelt
         </Button>
       )}
@@ -77,3 +59,28 @@ export function useEffectOnce(effect: () => Promise<any> | any): void {
     // eslint-disable-next-line
   }, []);
 }
+
+const getLinks = (params: Props) => {
+  try {
+    console.log(params);
+    const parsed = formSchema.parse(params);
+
+    const messagePart = parsed.message ? `&m=${parsed.message}` : "";
+    const amountPart = parsed.amount ? `&a=${parsed.amount}` : "";
+
+    return {
+      https: `https://qr.vipps.no/28/2/01/031/${parsed.phone}?v=1${messagePart}${amountPart}`,
+      vipps: `vipps://qr.vipps.no/28/2/01/031/${parsed.phone}?v=1${messagePart}${amountPart}`,
+      error: undefined,
+    };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        https: undefined,
+        vipps: undefined,
+        error: error,
+      };
+    }
+    throw new Error("Ugyldig link data, kopierte du riktig?");
+  }
+};
