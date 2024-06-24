@@ -45,7 +45,7 @@ export const Vipps = () => {
       : "";
     const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
 
-    const redirectUrl = `${env.NEXT_PUBLIC_HOST}/r?p=${data.phone}${messagePart}${amountPart}`;
+    const redirectUrl = `${env.NEXT_PUBLIC_HOST}/v?p=${data.phone}${messagePart}${amountPart}`;
 
     await navigator.clipboard.writeText(redirectUrl);
     addLocalLink(redirectUrl);
