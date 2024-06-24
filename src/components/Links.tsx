@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { env } from "../env";
 
 export const Links = () => {
-  const linkSlugs = getLocalLinks();
+  const linkSlugs = getLocalLinks().reverse();
 
   if (!linkSlugs?.length) {
     return null;
