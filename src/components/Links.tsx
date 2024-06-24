@@ -28,8 +28,7 @@ export const Links = () => {
         <TableCaption>Lenker du har laget fra denne nettleseren</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Link</TableHead>
-            <TableHead className="w-[100px]">Created</TableHead>
+            <TableHead className="">Created</TableHead>
             <TableHead className="text-right">Clicks</TableHead>
             <TableHead className="text-right">Copy</TableHead>
           </TableRow>
@@ -64,10 +63,8 @@ const Link = ({ slug }: LinkProps) => {
 
   return (
     <TableRow>
-      <TableCell className="">{slug}</TableCell>
       <TableCell className="">
         {linkQuery.data?.createdAt.toLocaleString("en-GB", {
-          // timeZone: utc ? "UTC" : undefined,
           month: "numeric",
           day: "numeric",
           hour: "numeric",
