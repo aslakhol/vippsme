@@ -13,6 +13,12 @@ import {
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { env } from "../env";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 
 export const Links = () => {
   const linkSlugs = getLocalLinks().reverse();
@@ -22,24 +28,30 @@ export const Links = () => {
   }
 
   return (
-    <div>
-      <h2 className="pb-4 text-2xl font-bold tracking-tight">Mine lenker</h2>
-      <Table>
-        <TableCaption>Lenker du har laget fra denne nettleseren</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="">Created</TableHead>
-            <TableHead className="text-right">Clicks</TableHead>
-            <TableHead className="text-right">Copy</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {linkSlugs.map((slug) => (
-            <Link key={slug} slug={slug} />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Mine lenker</AccordionTrigger>
+        <AccordionContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">Created</TableHead>
+                <TableHead className="text-right">Clicks</TableHead>
+                <TableHead className="text-right">Copy</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {linkSlugs.map((slug) => (
+                <Link key={slug} slug={slug} />
+              ))}
+            </TableBody>
+            <TableCaption>
+              Lenker du har laget fra denne nettleseren
+            </TableCaption>
+          </Table>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
