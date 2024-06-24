@@ -1,6 +1,5 @@
 "use client";
 import { Copy } from "lucide-react";
-import { api } from "../trpc/react";
 import {
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import {
 } from "./ui/table";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { env } from "../env";
 import {
   Accordion,
   AccordionContent,
@@ -21,9 +19,9 @@ import {
 } from "./ui/accordion";
 
 export const Links = () => {
-  const linkSlugs = getLocalLinks().reverse();
+  const links = getLocalLinks().reverse();
 
-  if (!linkSlugs?.length) {
+  if (!links?.length) {
     return null;
   }
 
@@ -35,14 +33,13 @@ export const Links = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="">Created</TableHead>
-                <TableHead className="text-right">Clicks</TableHead>
+                <TableHead className="">Link</TableHead>
                 <TableHead className="text-right">Copy</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {linkSlugs.map((slug) => (
-                <Link key={slug} slug={slug} />
+              {links.map((link) => (
+                <Link key={link} link={link} />
               ))}
             </TableBody>
             <TableCaption>
@@ -55,35 +52,23 @@ export const Links = () => {
   );
 };
 
-type LinkProps = { slug: string };
+type LinkProps = { link: string };
 
-const Link = ({ slug }: LinkProps) => {
-  const linkQuery = api.link.get.useQuery({ slug });
-
+const Link = ({ link }: LinkProps) => {
   const copyLink = async () => {
-    if (!linkQuery.data?.https) {
+    if (!link) {
       return;
     }
-    const redirectUrl = `${env.NEXT_PUBLIC_HOST}/s/${slug}`;
 
-    await navigator.clipboard.writeText(redirectUrl);
-
+    await navigator.clipboard.writeText(link);
     toast.success("Lenke kopiert", {
-      description: redirectUrl,
+      description: link,
     });
   };
 
   return (
     <TableRow>
-      <TableCell className="">
-        {linkQuery.data?.createdAt.toLocaleString("en-GB", {
-          month: "numeric",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        })}
-      </TableCell>
-      <TableCell className="text-right">{linkQuery.data?.clicks}</TableCell>
+      <TableCell className="">{link}</TableCell>
       <TableCell className="text-right">
         <Button onClick={copyLink} variant="outline" size="icon">
           <Copy className="h-4 w-4" />

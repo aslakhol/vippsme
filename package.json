@@ -5,11 +5,6 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:reset": "npx --yes -p dotenv-cli dotenv -c development -- drizzle-kit migrate reset",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start"

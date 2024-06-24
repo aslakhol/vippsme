@@ -16,7 +16,6 @@ import {
 import { Button } from "./ui/button";
 import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
-import { api } from "../trpc/react";
 import { formSchema } from "../lib/utils";
 import { env } from "../env";
 
@@ -28,18 +27,6 @@ const DynamicLinks = dynamic(() => import("./Links"), {
 
 export const Vipps = () => {
   const { addLocalLink } = useAddLocalLink();
-  const createLinkMutation = api.link.create.useMutation({
-    onSuccess: async (response) => {
-      const redirectUrl = `${env.NEXT_PUBLIC_HOST}/s/${response.slug}`;
-
-      await navigator.clipboard.writeText(redirectUrl);
-      addLocalLink(response.slug);
-
-      toast.success("Lenke kopiert", {
-        description: redirectUrl,
-      });
-    },
-  });
 
   const defaultPhone = useLocalPhone();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,11 +40,17 @@ export const Vipps = () => {
 
   const handleChange = async (data: z.infer<typeof formSchema>) => {
     window.localStorage.setItem("phone", data.phone);
+    const messagePart = data.message
+      ? `&m=${encodeURIComponent(data.message)}`
+      : "";
+    const amountPart = data.amount ? `&a=${data.amount * 100}` : "";
 
-    createLinkMutation.mutate({
-      phone: data.phone,
-      amount: data.amount,
-      message: data.message,
+    const redirectUrl = `${env.NEXT_PUBLIC_HOST}/v?p=${data.phone}${messagePart}${amountPart}`;
+
+    await navigator.clipboard.writeText(redirectUrl);
+    addLocalLink(redirectUrl);
+    toast.success("Lenke kopiert", {
+      description: redirectUrl,
     });
   };
 
@@ -155,12 +148,12 @@ const useAddLocalLink = () => {
 
   const localLinks = window.localStorage.getItem("links")?.split(",") ?? [];
 
-  const addLocalLink = (slug: string) => {
-    if (localLinks.includes(slug)) {
+  const addLocalLink = (link: string) => {
+    if (localLinks.includes(link)) {
       return;
     }
 
-    const newLocalLinks = [...localLinks, slug];
+    const newLocalLinks = [...localLinks, link];
 
     window.localStorage.setItem("links", newLocalLinks.join(","));
   };
