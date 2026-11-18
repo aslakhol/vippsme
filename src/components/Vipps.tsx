@@ -56,6 +56,19 @@ export const Vipps = () => {
 
   return (
     <div>
+      <div className="mb-8 rounded-md border border-[#ff5b24] p-3 text-sm leading-6">
+        Dette prosjektet pleide å lage lenker som fylte ut nummer, beløp og
+        melding når man trykket på dem. Vipps har endret qr-kode behandlingen
+        sin slik at løsningen ikke fungerer lenger. Om du vet hvordan man
+        fortsatt kan gjøre dette,{" "}
+        <a
+          href="https://github.com/aslakhol/vippsme/issues/new"
+          className="underline"
+        >
+          si gjerne ifra
+        </a>
+        !
+      </div>
       <h1 className="text-3xl font-extrabold tracking-tight">
         Lag din egen Vipps-lenke
       </h1>
