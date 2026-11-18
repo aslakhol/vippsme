@@ -69,8 +69,8 @@ const getLinks = (params: Props) => {
     const amountPart = parsed.amount ? `&a=${parsed.amount}` : "";
 
     return {
-      https: `https://qr.vipps.no/28/2/01/031/${parsed.phone}?v=1${messagePart}${amountPart}`,
-      vipps: `vipps://qr.vipps.no/28/2/01/031/${parsed.phone}?v=1${messagePart}${amountPart}`,
+      https: `https://qr.vipps.no/28/2/01/031/47${parsed.phone}?v=1${messagePart}${amountPart}`,
+      vipps: `vipps://qr.vipps.no/28/2/01/031/47${parsed.phone}?v=1${messagePart}${amountPart}`,
       error: undefined,
     };
   } catch (error) {
